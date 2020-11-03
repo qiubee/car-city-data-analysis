@@ -6,3 +6,4 @@ This repo is intended for data cleaning and data analysis. Making use of Python 
 
 * [Merge Dataframes](https://realpython.com/pandas-merge-join-and-concat/)
 * [Merge, join, concatenate and compare - Pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/merging.html)
+* [Matplotlib - sample plots](https://matplotlib.org/tutorials/introductory/sample_plots.html#sphx-glr-tutorials-introductory-sample-plots-py)
