@@ -1,10 +1,11 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 
 # data
-ISD = pd.read_csv("datasets/Index_Statisch_Dynamisch.csv")
-GB_BH = pd.read_csv("datasets/GEBIEDSBEHEERDER.csv")
-GB_SPEC = pd.read_csv("datasets/SPECIFICATIES_PARKEERGEBIED.csv")
+ISD = pd.read_csv("datasets/RDW/Index_Statisch_Dynamisch.csv")
+GB_BH = pd.read_csv("datasets/RDW/GEBIEDSBEHEERDER.csv")
+GB_SPEC = pd.read_csv("datasets/RDW/SPECIFICATIES_PARKEERGEBIED.csv")
 
 
 def data_head(data):
