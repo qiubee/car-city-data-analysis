@@ -74,7 +74,7 @@ print("Duplicate keys:", dupl)
 merged_dfs = merge_on(datasets, dupl)
 AREA_MAN_ID = merge_dfs([P_OPEN, AREA], "AreaManagerId", "inner")
 all_data = merge_dfs([merged_dfs, AREA_MAN_ID], "AreaManagerId", "inner")
-all_data = all_data.drop(all_data.columns["PeriodName", "URL"], axis=1)
+all_data = all_data.drop(columns=["PeriodName", "URL"], axis=1)
 rename_col = {"UsageId_x": "Usage_Id", "UsageId_y": "UsageType_Id", "AreaId_y": "Area_Id", "AreaId_x": "AreaZone_Id"}
 all_data = all_data.rename(columns=rename_col)
 write_csv(all_data, "RDW_dataset.csv")
