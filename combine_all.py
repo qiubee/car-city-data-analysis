@@ -1,5 +1,7 @@
 import pandas as pd
 from functools import reduce
+from pathlib import Path
+from os import chdir
 
 
 def show_datasets(list):
@@ -21,10 +23,11 @@ def get_duplicates(dataset_list):
     return duplicates
 
 
-def merge_dfs(data_frames, col_name):
-    return reduce(lambda left, right: pd.merge(left, right, on=[col_name], how="outer"), data_frames)
+def merge_dfs(data_frames, col_name, type="outer"):
+    return reduce(lambda left, right: pd.merge(left, right, on=[col_name], how=type), data_frames)
 
 
+# Wrapping around list https://stackoverflow.com/questions/22122623/wrapping-around-on-a-list-when-list-index-is-out-of-range
 def wrap_list_index(list, add=1):
     result = []
     for i in range(len(list)):
@@ -34,35 +37,44 @@ def wrap_list_index(list, add=1):
 
 def merge_on(data_frames, col_names):
     merged = []
-    print(data_frames.index(0))
-    # for i, df in enumerate(data_frames):
-        # lst = wrap_list_index(data_frames, 1)
-        # print(lst[i])
-        # df_set = [df, data_frames[i + 1]]
-        # for key in col_names:
-        #     try:
-        #         merged = merge_dfs(df_set, key)
-        #         print(f"Match: {key}")
-        #     except:
-        #         pass
+    for i, df in enumerate(data_frames):
+        r = (i + 1) % len(data_frames)
+        df_set = [df, data_frames[r]]
+        for key in col_names:
+            try:
+                merged = merge_dfs(df_set, key)
+                print(f"Match: {key}")
+            except KeyError:
+                pass
     return merged
 
 
+def write_csv(data, filename):
+    Path("data").mkdir(parents=True, exist_ok=True)
+    chdir("data")
+    data.to_csv(filename)
+    print(filename, "is created in folder: data")
+
+
 # datasets
-AREA_MAN = pd.read_csv("../datasets/RDW/GEBIEDSBEHEERDER.csv")
-FARE = pd.read_csv("../datasets/RDW/TARIEFDEEL.csv")
-AREA = pd.read_csv("../datasets/RDW/GEBIED.csv")
-INDEX = pd.read_csv("../datasets/RDW/Index_Statisch_Dynamisch.csv")
-P_OPEN = pd.read_csv("../datasets/RDW/PARKING_OPEN.csv")
-P_ACCESS = pd.read_csv("../datasets/RDW/PARKING_TOEGANG.csv")
-P_SPEC = pd.read_csv("../datasets/RDW/SPECIFICATIES_PARKEERGEBIED.csv")
-TIMEPERIOD = pd.read_csv("../datasets/RDW/TIJDVAK.csv")
-USEGOAL = pd.read_csv("../datasets/RDW/GEBRUIKSDOEL.csv")
+AREA_MAN = pd.read_csv("datasets/RDW/GEBIEDSBEHEERDER.csv")
+FARE = pd.read_csv("datasets/RDW/TARIEFDEEL.csv")
+AREA = pd.read_csv("datasets/RDW/GEBIED.csv")
+INDEX = pd.read_csv("datasets/RDW/Index_Statisch_Dynamisch.csv")
+P_OPEN = pd.read_csv("datasets/RDW/PARKING_OPEN.csv")
+P_ACCESS = pd.read_csv("datasets/RDW/PARKING_TOEGANG.csv")
+P_SPEC = pd.read_csv("datasets/RDW/SPECIFICATIES_PARKEERGEBIED.csv")
+TIMEPERIOD = pd.read_csv("datasets/RDW/TIJDVAK.csv")
+USEGOAL = pd.read_csv("datasets/RDW/GEBRUIKSDOEL.csv")
 
 datasets = [AREA_MAN, FARE, AREA, INDEX, P_OPEN, P_ACCESS, P_SPEC, TIMEPERIOD, USEGOAL]
-show_datasets(datasets)
-
 dupl = get_duplicates(datasets)
-print(dupl)
+print("Duplicate keys:", dupl)
 
-merge_on(datasets, dupl)
+merged_dfs = merge_on(datasets, dupl)
+AREA_MAN_ID = merge_dfs([P_OPEN, AREA], "AreaManagerId", "inner")
+all_data = merge_dfs([merged_dfs, AREA_MAN_ID], "AreaManagerId", "inner")
+all_data = all_data.drop(all_data.columns["PeriodName", "URL"], axis=1)
+rename_col = {"UsageId_x": "Usage_Id", "UsageId_y": "UsageType_Id", "AreaId_y": "Area_Id", "AreaId_x": "AreaZone_Id"}
+all_data = all_data.rename(columns=rename_col)
+write_csv(all_data, "RDW_dataset.csv")
