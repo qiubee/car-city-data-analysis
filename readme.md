@@ -10,3 +10,4 @@ This repo is intended for data cleaning and data analysis. Making use of Python 
 * [Python: pandas merge multiple dataframes](https://stackoverflow.com/questions/44327999/python-pandas-merge-multiple-dataframes)
 * [Find duplicates in a list](https://shoutthegeek.com/how-to-find-duplicates-in-a-list-in-python/?PageSpeed=noscript)
 * [Wrapping around list index - Stackoverflow](https://stackoverflow.com/questions/22122623/wrapping-around-on-a-list-when-list-index-is-out-of-range)
+* [How can I safely create a nested directory - Stackoverflow](https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory)
