@@ -28,6 +28,15 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [Open Data Parkeren: TIJDVAK](https://opendata.rdw.nl/Parkeren/Open-Data-Parkeren-TIJDVAK/ixf8-gtwq)
 * [Open Data Parkeren: PARKEERGEBIED](https://opendata.rdw.nl/Parkeren/Open-Data-Parkeren-PARKEERGEBIED/mz4f-59fw)
 
+### CBS
+
+* [Geografische data](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data)
+* [CBS gebiedsindelingen](https://www.cbs.nl/nl-nl/dossier/nederland-regionaal/geografische-data/cbs-gebiedsindelingen)
+
+### GeoNames
+
+* [GeoNames Data - countries](https://download.geonames.org/export/dump/)
+
 ## Resources
 
 * [Merge Dataframes](https://realpython.com/pandas-merge-join-and-concat/)
