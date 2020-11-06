@@ -6,6 +6,7 @@ This repo is intended for data cleaning and data analysis. Making use of Python 
 
 * Python >= 3.6
 * [`pandas`](https://pandas.pydata.org/)
+* [`geopandas`](https://github.com/geopandas/geopandas)
 
 ## Datasets
 
