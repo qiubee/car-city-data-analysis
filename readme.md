@@ -46,3 +46,5 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [Find duplicates in a list](https://shoutthegeek.com/how-to-find-duplicates-in-a-list-in-python/?PageSpeed=noscript)
 * [Wrapping around list index - Stackoverflow](https://stackoverflow.com/questions/22122623/wrapping-around-on-a-list-when-list-index-is-out-of-range)
 * [How can I safely create a nested directory - Stackoverflow](https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory)
+* [How To Install GDAL/OGR Packages](https://mothergeo-py.readthedocs.io/en/latest/development/how-to/gdal-ubuntu-pkg.html)
+* [Installing modules from source code - Harvard University](https://rce-docs.hmdc.harvard.edu/book/installing-modules-source-code)
