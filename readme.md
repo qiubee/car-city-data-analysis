@@ -49,3 +49,4 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [How can I safely create a nested directory - Stackoverflow](https://stackoverflow.com/questions/273192/how-can-i-safely-create-a-nested-directory)
 * [How To Install GDAL/OGR Packages](https://mothergeo-py.readthedocs.io/en/latest/development/how-to/gdal-ubuntu-pkg.html)
 * [Installing modules from source code - Harvard University](https://rce-docs.hmdc.harvard.edu/book/installing-modules-source-code)
+* [Can geopandas get a geopackage's (or other vector file) all layers? - Stackoverlfow](https://stackoverflow.com/questions/56165069/can-geopandas-get-a-geopackages-or-other-vector-file-all-layers)
