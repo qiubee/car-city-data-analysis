@@ -18,10 +18,15 @@ layers = get_gpkg_layer_names(GPKG_FILE)
 landsdeel_2021_id = layers.index("cbs_landsdeel_2021_gegeneraliseerd")
 gemeente_2021_id = layers.index("cbs_gemeente_2021_labelpoint")
 gemeente_2020_id = layers.index("cbs_gemeente_2020_gegeneraliseerd")
+buurt_2020_id = layers.index("cbs_buurt_2020_niet_gegeneraliseerd")
 
 GEMEENTE_2021_IND = layers[gemeente_2021_id]
 LANDSDEEL_2021 = layers[landsdeel_2021_id]
 GEMEENTE_2020_IND = layers[gemeente_2020_id]
+BUURT_2020_IND = layers[buurt_2020_id]
 
-data = gp.read_file(GPKG_FILE, layer=GEMEENTE_2021_IND)
-print(data)
+
+# data = gp.read_file(GPKG_FILE, layer=GEMEENTE_2021_IND)
+data = gp.read_file(GPKG_FILE, layer=buurt_2020_id)
+
+print(data.head())
