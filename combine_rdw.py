@@ -75,7 +75,14 @@ print("Duplicate keys:", dupl)
 merged_dfs = merge_on(datasets, dupl)
 AREA_MAN_ID = merge_dfs([P_OPEN, AREA], "AreaManagerId", "inner")
 all_data = merge_dfs([merged_dfs, AREA_MAN_ID], "AreaManagerId", "inner")
-all_data = all_data.drop(columns=["PeriodName", "URL"], axis=1)
-rename_col = {"UsageId_x": "Usage_Id", "UsageId_y": "UsageType_Id", "AreaId_y": "Area_Id", "AreaId_x": "AreaZone_Id"}
+
+rename_col = {"UsageId_y": "UsageType_Id", "AreaId_x": "AreaZone_Id"}
+remove_col = ["SpecificationIndicator", "SuperiorAreaManagerId", "StartDateAreaManagerId", "EndDateAreaManagerId", "StartOfPeriod", "EndOfPeriod", "StartDateArea", "EndDateArea", "AreaId_y", "UsageId_x", "PeriodName", "URL"]
+
+all_data = all_data.drop(columns=remove_col, axis=1)
 all_data = all_data.rename(columns=rename_col)
+
+all_data["ExitPossibleAllDay"] = all_data["ExitPossibleAllDay"].replace([1, 0],[True, False])
+all_data["OpenAllYear"] = all_data["OpenAllYear"].replace([1.0, 0.0],[True, False])
+
 write_csv(all_data, "RDW_dataset")
