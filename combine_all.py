@@ -52,7 +52,7 @@ def merge_on(data_frames, col_names):
 def write_csv(data, filename):
     Path("data").mkdir(parents=True, exist_ok=True)
     chdir("data")
-    data.to_csv(filename)
+    data.to_csv(f"{filename}.csv")
     print(filename, "is created in folder: data")
 
 
@@ -77,4 +77,4 @@ all_data = merge_dfs([merged_dfs, AREA_MAN_ID], "AreaManagerId", "inner")
 all_data = all_data.drop(columns=["PeriodName", "URL"], axis=1)
 rename_col = {"UsageId_x": "Usage_Id", "UsageId_y": "UsageType_Id", "AreaId_y": "Area_Id", "AreaId_x": "AreaZone_Id"}
 all_data = all_data.rename(columns=rename_col)
-write_csv(all_data, "RDW_dataset.csv")
+write_csv(all_data, "RDW_dataset")
