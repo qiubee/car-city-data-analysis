@@ -36,7 +36,7 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 
 ### GeoNames
 
-* [GeoNames Data - countries](https://download.geonames.org/export/dump/)
+* [GeoNames Data - countries](https://download.geonames.org/export/zip/)
 
 ## Resources
 
