@@ -15,4 +15,5 @@ nl_postal_columns = ["CountryCode", "PostalCode", "Place", "Province", "Province
 nl_postal = pd.read_table("datasets/geonames/NL_full/NL_full.txt", header=None)
 nl_postal.columns = nl_postal_columns
 nl_postal = nl_postal.drop(nl_postal.columns[[0, 4, 5, 6, 7, 8, 11]], axis=1)
+nl_postal.index.name = "Id"
 write_csv(nl_postal, "nl_postal")
