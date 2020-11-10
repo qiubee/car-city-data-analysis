@@ -50,3 +50,4 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [How To Install GDAL/OGR Packages](https://mothergeo-py.readthedocs.io/en/latest/development/how-to/gdal-ubuntu-pkg.html)
 * [Installing modules from source code - Harvard University](https://rce-docs.hmdc.harvard.edu/book/installing-modules-source-code)
 * [Can geopandas get a geopackage's (or other vector file) all layers? - Stackoverlfow](https://stackoverflow.com/questions/56165069/can-geopandas-get-a-geopackages-or-other-vector-file-all-layers)
+* [Understanding Geonames dump](https://www.logilab.org/blogentry/10074668)
