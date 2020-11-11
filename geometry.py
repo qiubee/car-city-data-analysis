@@ -1,3 +1,5 @@
+from pathlib import Path
+from os import chdir
 import geopandas as gp
 import pandas as pd
 import fiona
@@ -12,21 +14,35 @@ def get_gpkg_layer_names(geopkg_src):
     return layers
 
 
-layers = get_gpkg_layer_names(GPKG_FILE)
-# print(layers)
-
-landsdeel_2021_id = layers.index("cbs_landsdeel_2021_gegeneraliseerd")
-gemeente_2021_id = layers.index("cbs_gemeente_2021_labelpoint")
-gemeente_2020_id = layers.index("cbs_gemeente_2020_gegeneraliseerd")
-buurt_2020_id = layers.index("cbs_buurt_2020_niet_gegeneraliseerd")
-
-GEMEENTE_2021_IND = layers[gemeente_2021_id]
-LANDSDEEL_2021 = layers[landsdeel_2021_id]
-GEMEENTE_2020_IND = layers[gemeente_2020_id]
-BUURT_2020_IND = layers[buurt_2020_id]
+def drop_df_columns(df, columns):
+    return df.drop(df.columns[columns], axis=1)
 
 
-# data = gp.read_file(GPKG_FILE, layer=GEMEENTE_2021_IND)
-data = gp.read_file(GPKG_FILE, layer=buurt_2020_id)
+def write_csv(data, filename):
+    Path("data").mkdir(parents=True, exist_ok=True)
+    chdir("data")
+    file = f"{filename}.csv"
+    data.to_csv(file)
+    print(file, "is created in folder: data")
+    chdir("../")
 
-print(data.head())
+
+def process_gpkg_layer(gpkg_file, all_layers, layer_name, column_drop_list):
+    layer_id = all_layers.index(layer_name)
+    df = gp.read_file(gpkg_file, layer=layer_id)
+    df = drop_df_columns(df, column_drop_list)
+    write_csv(df, layer_name)
+
+
+def process_gpkg_multi(gpkg_file, layers, col_drop_lst):
+    all_layers = get_gpkg_layer_names(gpkg_file)
+    for layer in layers:
+        process_gpkg_layer(gpkg_file, all_layers, layer, col_drop_lst)
+
+
+pv = "cbs_provincie_2020_gegeneraliseerd"
+gm = "cbs_gemeente_2020_gegeneraliseerd"
+
+col_drop_lst = [0, 1, 3]
+layers = [pv, gm]
+process_gpkg_multi(GPKG_FILE, layers, col_drop_lst)
