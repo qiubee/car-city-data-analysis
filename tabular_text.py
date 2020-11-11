@@ -9,6 +9,7 @@ def write_csv(data, filename):
     file = f"{filename}.csv"
     data.to_csv(file)
     print(file, "is created in folder: data")
+    chdir("../")
 
 
 geo_postal_columns = ["countryCode", "postalCode", "placeName", "province", "adminCode1", "municipality", "adminCode2", "community", "adminCode3", "latitude", "longitude", "accuracy"]
@@ -17,7 +18,6 @@ nl_postal.columns = geo_postal_columns
 nl_postal = nl_postal.drop(nl_postal.columns[[4, 6, 7, 8, 11]], axis=1)
 nl_postal = nl_postal.drop(nl_postal.iloc[:, :2], axis=1)
 
-# nl_postal = nl_postal.drop_duplicates()
-print(nl_postal)
-
-# write_csv(nl_postal, "nl_postal")
+group_col = [geo_postal_columns[i] for i in [2, 3, 5]]
+nl_postal = nl_postal.groupby(group_col).mean()
+write_csv(nl_postal, "nl_postal")
