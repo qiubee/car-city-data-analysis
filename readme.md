@@ -51,3 +51,4 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [Installing modules from source code - Harvard University](https://rce-docs.hmdc.harvard.edu/book/installing-modules-source-code)
 * [Can geopandas get a geopackage's (or other vector file) all layers? - Stackoverlfow](https://stackoverflow.com/questions/56165069/can-geopandas-get-a-geopackages-or-other-vector-file-all-layers)
 * [Understanding Geonames dump](https://www.logilab.org/blogentry/10074668)
+* [Transforming a polygon to a linestring](https://gis.stackexchange.com/questions/290756/transforming-a-polygon-to-a-linestring/332157)
