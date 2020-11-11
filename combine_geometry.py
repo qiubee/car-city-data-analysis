@@ -20,5 +20,10 @@ nl_place_hierarchy = nl_place_hierarchy.rename(columns=rename_nl_col)
 
 rdw_geo = pd.merge(rdw, nl_place_hierarchy, how="left", on=["AreaManagerDesc"])
 
-# rdw_geo = rdw_geo.groupby("province")["UsageIdDesc"].agg(lambda x: x.value_counts().index[0])
+# rdw_group_col = [rdw_geo.columns.values[i] for i in [5]]
+rdw_geo["UsageType_count"] = rdw_geo.groupby("UsageType_Id")["UsageType_Id"].transform(lambda x: x.count())
+
+# get sum of "ExitPossibleAllDay" & "OpenAllYear" of each province
+
+# province_geo = rdw_geo.groupby(rdw_group_col)["UsageType_Id"].value_counts()
 print(rdw_geo)
