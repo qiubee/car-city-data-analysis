@@ -22,7 +22,7 @@ def write_csv(data, filename):
     Path("data").mkdir(parents=True, exist_ok=True)
     chdir("data")
     file = f"{filename}.csv"
-    data.to_csv(file, index=False)
+    data.to_csv(file)
     print(file, "is created in folder: data")
     chdir("../")
 
