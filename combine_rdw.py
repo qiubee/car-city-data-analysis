@@ -55,6 +55,7 @@ def write_csv(data, filename):
     file = f"{filename}.csv"
     data.to_csv(file)
     print(file, "is created in folder: data")
+    chdir("../")
 
 
 # datasets
