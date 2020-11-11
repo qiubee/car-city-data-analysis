@@ -83,7 +83,7 @@ remove_col = ["SpecificationIndicator", "SuperiorAreaManagerId", "StartDateAreaM
 all_data = all_data.drop(columns=remove_col, axis=1)
 all_data = all_data.rename(columns=rename_col)
 
-all_data["ExitPossibleAllDay"] = all_data["ExitPossibleAllDay"].replace([1, 0],[True, False])
-all_data["OpenAllYear"] = all_data["OpenAllYear"].replace([1.0, 0.0],[True, False]).fillna(False)
+all_data["ExitPossibleAllDay"] = all_data["ExitPossibleAllDay"].replace([1, 0], [True, False])
+all_data["OpenAllYear"] = all_data["OpenAllYear"].replace([1.0, 0.0], [True, False]).fillna(False)
 
 write_csv(all_data, "RDW_dataset")
