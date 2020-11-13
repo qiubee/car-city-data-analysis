@@ -51,13 +51,5 @@ pv_sum_col = ["ExitPossibleAllDay", "OpenAllYear", "UsageType_count"]
 pv_group_cols = [rdw_geo.columns.values[i] for i in [4, 5]]
 pv_data = group_and_sum(mp_data, pv_group_cols, pv_sum_col)
 
-# add geometry to province & municipality
-rename_to_pv = {"statnaam": "province"}
-rename_to_mp = {"statnaam": "municipality"}
-pv_geo = NL_PROVINCE_GEO.rename(columns=rename_to_pv)
-mp_geo = NL_MUNICIPALITY_GEO.rename(columns=rename_to_mp)
-pv_complete = pd.merge(pv_geo, rdw_geo, how="left", on=["province"])
-mp_complete = pd.merge(mp_geo, rdw_geo, how="left", on=["municipality"])
-
-write_csv(pv_complete, "province")
-write_csv(mp_complete, "municipality")
+write_csv(pv_data, "province")
+write_csv(mp_data, "municipality")
