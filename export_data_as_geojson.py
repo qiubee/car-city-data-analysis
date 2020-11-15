@@ -25,22 +25,41 @@ def group_by(list_of_dicts, key):
     return reduce(lambda acc, next: group(acc, next, key), list_of_dicts, d)
 
 
-def list_keys(dict, keyname="key"):
-    return list({keyname: k, "values": v} for (k, v) in dict.items())
+def count_total(dict, key):
+    return reduce(lambda acc, next: acc + next[key], dict, 0)
+
+
+def list_keys(dict, key_name="key"):
+    # create list of dict keys
+    return list({key_name: k, "values": v} for (k, v) in dict.items())
 
 
 def nest(dict, key):
-    return list_keys(group_by(dict, key), key)
+    return list_keys(group_by(dict, key))
+
+
+def process_province_data(dict):
+    grouped = nest(pv_dict, "province")
+    for dict in grouped:
+        dict["province"] = dict["key"]
+        # loop over dicts in list of key "values" & filter out key "province"
+        dict["parking"] = [{key: value for (key, value) in d.items() if key != "province"} for d in dict["values"]]
+        # count total
+        dict["parkingTotal"] = count_total(dict["parking"], "UsageType_count")
+        dict["openAllYearTotal"] = count_total(dict["parking"], "OpenAllYear")
+        dict["exitPossibleAllDayTotal"] = count_total(dict["parking"], "ExitPossibleAllDay")
+        remove_keys = ("key", "values")
+        for k in remove_keys:
+            dict.pop(k, None)
+    return grouped
 
 
 # convert DataFrame to dictionary
 pv_dict = PROVINCE.to_dict("records")
 mp_dict = MUNICIPALITY.to_dict("records")
 
-pv_test = nest(pv_dict, "province")
-
-
-pprint(pv_test)
+pv = process_province_data(pv_dict)
+pprint(pv)
 
 # add geometry
 # rename_to_pv = {"statnaam": "province"}
