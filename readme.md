@@ -54,3 +54,4 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [Transforming a polygon to a linestring](https://gis.stackexchange.com/questions/290756/transforming-a-polygon-to-a-linestring/332157)
 * [Python Dictionary Comprehension Tutorial](https://www.datacamp.com/community/tutorials/python-dictionary-comprehension)
 * [Group Array of JavaScript Objects by Key or Property Value](https://gist.github.com/JamieMason/0566f8412af9fe6a1d470aa1e089a752)
+* [Convert GeoJSON to/from WKT in Python](https://gist.github.com/drmalex07/5a54fc4f1db06a66679e)
