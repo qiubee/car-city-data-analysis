@@ -4,10 +4,13 @@ from pprint import pprint
 from collections import defaultdict
 from functools import reduce
 from shapely import wkt
+from pathlib import Path
+from os import chdir
 
 
 PROVINCE = pd.read_csv("data/province.csv")
 NL_PROVINCE_GEO = pd.read_csv("data/cbs_provincie_2020_gegeneraliseerd.csv")
+NL_MUNICIPALITY_GEO = pd.read_csv("data/cbs_gemeente_2020_gegeneraliseerd.csv")
 MUNICIPALITY = pd.read_csv("data/municipality.csv")
 
 
@@ -72,23 +75,45 @@ def process_province_data(dict):
     return grouped
 
 
+def create_feature(shape, data):
+    return geojson.Feature(geometry=shape, properties=data)
+
+
+def create_featurecollection(geo_dict, data_dict, key):
+    features = [create_feature(gdict["geometry"], ddict) for gdict in geo_dict for ddict in data_dict if gdict[key] == ddict[key]]
+    return geojson.FeatureCollection(features)
+
+
+def write_json(dict, file_name):
+    Path("data").mkdir(parents=True, exist_ok=True)
+    chdir("data")
+    file = f"{file_name}.json"
+    with open(file, "w") as json_file:
+        geojson.dump(dict, json_file)
+    print(file, "is created in folder: data")
+    chdir("../")
+
+
+# convert to shape geometry
+rename_to_pv = {"statnaam": "province"}
+rename_to_mp = {"statnaam": "municipality"}
+pv_geo = NL_PROVINCE_GEO.rename(columns=rename_to_pv)
+mp_geo = NL_MUNICIPALITY_GEO.rename(columns=rename_to_mp)
+pv_geo["geometry"] = pv_geo["geometry"].apply(wkt.loads)
+mp_geo["geometry"] = mp_geo["geometry"].apply(wkt.loads)
+
+
 # convert DataFrame to dictionary
 pv_dict = PROVINCE.to_dict("records")
 mp_dict = MUNICIPALITY.to_dict("records")
+pv_geo_dict = pv_geo.to_dict("records")
+mp_geo_dict = mp_geo.to_dict("records")
 
 # transform dictionaries
 pv = process_province_data(pv_dict)
 
-# add geometry
-rename_to_pv = {"statnaam": "province"}
-pv_geo = NL_PROVINCE_GEO.rename(columns=rename_to_pv)
-pv_geo["geometry"] = NL_PROVINCE_GEO["geometry"].apply(wkt.loads)
-shape = pv_geo["geometry"][0]
+# create geojson
+pv_geo_json = create_featurecollection(pv_geo_dict, pv, "province")
 
-pv_shape_geojson = geojson.Feature(geometry=shape, properties={})
-print(pv_shape_geojson)
-
-# rename_to_mp = {"statnaam": "municipality"}
-# mp_geo = NL_MUNICIPALITY_GEO.rename(columns=rename_to_mp)
-# pv_complete = pd.merge(pv_geo, rdw_geo, how="left", on=["province"])
-# mp_complete = pd.merge(mp_geo, rdw_geo, how="left", on=["municipality"])
+# export as json
+write_json(pv_geo_json, "provinces")
