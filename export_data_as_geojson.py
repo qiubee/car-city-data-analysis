@@ -1,6 +1,5 @@
 import pandas as pd
 import geojson
-from pprint import pprint
 from collections import defaultdict
 from functools import reduce
 from shapely import wkt
