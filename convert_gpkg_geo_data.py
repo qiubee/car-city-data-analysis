@@ -1,6 +1,6 @@
 from pathlib import Path
 from os import chdir
-import geopandas as gp
+import geopandas as gpd
 import pandas as pd
 import fiona
 
@@ -29,8 +29,9 @@ def write_csv(data, filename):
 
 def process_gpkg_layer(gpkg_file, all_layers, layer_name, column_drop_list):
     layer_id = all_layers.index(layer_name)
-    df = gp.read_file(gpkg_file, layer=layer_id)
+    df = gpd.read_file(gpkg_file, layer=layer_id)
     df = drop_df_columns(df, column_drop_list)
+    df = df.set_crs(epsg=28992)
     write_csv(df, layer_name)
 
 
