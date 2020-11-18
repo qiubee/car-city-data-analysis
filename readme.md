@@ -56,3 +56,5 @@ The datasets from [RDW](https://opendata.rdw.nl/):
 * [Python Dictionary Comprehension Tutorial](https://www.datacamp.com/community/tutorials/python-dictionary-comprehension)
 * [Group Array of JavaScript Objects by Key or Property Value](https://gist.github.com/JamieMason/0566f8412af9fe6a1d470aa1e089a752)
 * [Convert GeoJSON to/from WKT in Python](https://gist.github.com/drmalex07/5a54fc4f1db06a66679e)
+* [Geospatial adventures. Step 2: Pandas vs. GeoPandas - Towards Data Science](https://towardsdatascience.com/geospatial-adventures-step-2-pandas-vs-geopandas-16e842d0e3a7?gi=e40afba336b6)
+* [EPSG:28992 - Spatial Reference](https://spatialreference.org/ref/epsg/28992/)
