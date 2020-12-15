@@ -3,8 +3,6 @@ from os import chdir
 import pandas as pd
 
 NL_POSTAL = pd.read_csv("data/nl_postal.csv")
-NL_PROVINCE_GEO = pd.read_csv("data/cbs_provincie_2020_gegeneraliseerd.csv")
-NL_MUNICIPALITY_GEO = pd.read_csv("data/cbs_gemeente_2020_gegeneraliseerd.csv")
 RDW_DATASET = pd.read_csv("data/RDW_dataset.csv")
 
 
@@ -44,12 +42,19 @@ mp_group_cols = [rdw_geo.columns.values[i] for i in [4, 5, 6, 7]]
 mp_summed = group_and_sum(rdw_geo, mp_group_cols, mp_sum_cols)
 
 # count sum of municipalities
-mp_data = mp_summed.groupby(["municipality", "UsageType_Id", "province"], as_index=False).sum()
+mp_all_summed = mp_summed.groupby(["municipality", "UsageType_Id", "province"], as_index=False).sum()
 
-# count sum of  province
+# add all municipalities with no data
+nl_municipalities = drop_df_columns(nl_place_hierarchy, [0])
+# print(mp_all_summed)
+mp_data = pd.merge(mp_all_summed, nl_municipalities, how="outer", on=["municipality"])
+mp_data = mp_data.drop_duplicates()
+mp_data = mp_data.reset_index(drop=True)
+
+# count sum of province
 pv_sum_col = ["ExitPossibleAllDay", "OpenAllYear", "UsageType_count"]
 pv_group_cols = [rdw_geo.columns.values[i] for i in [4, 5]]
-pv_data = group_and_sum(mp_data, pv_group_cols, pv_sum_col)
+pv_data = group_and_sum(mp_all_summed, pv_group_cols, pv_sum_col)
 
 write_csv(pv_data, "province")
 write_csv(mp_data, "municipality")
