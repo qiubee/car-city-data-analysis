@@ -44,9 +44,8 @@ mp_summed = group_and_sum(rdw_geo, mp_group_cols, mp_sum_cols)
 # count sum of municipalities
 mp_all_summed = mp_summed.groupby(["municipality", "UsageType_Id", "province"], as_index=False).sum()
 
-# add all municipalities with no data
+# add missing municipalities
 nl_municipalities = drop_df_columns(nl_place_hierarchy, [0])
-# print(mp_all_summed)
 mp_data = pd.merge(mp_all_summed, nl_municipalities, how="outer", on=["municipality"])
 mp_data = mp_data.drop_duplicates()
 mp_data = mp_data.reset_index(drop=True)
