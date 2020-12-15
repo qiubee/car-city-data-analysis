@@ -46,7 +46,7 @@ mp_all_summed = mp_summed.groupby(["municipality", "UsageType_Id", "province"], 
 
 # add missing municipalities
 nl_municipalities = drop_df_columns(nl_place_hierarchy, [0])
-mp_data = pd.merge(mp_all_summed, nl_municipalities, how="outer", on=["municipality"])
+mp_data = pd.merge(mp_all_summed, nl_municipalities, how="outer", on=["municipality", "province"])
 mp_data = mp_data.drop_duplicates()
 mp_data = mp_data.reset_index(drop=True)
 
