@@ -5,6 +5,7 @@ from functools import reduce
 from shapely import wkt
 from pathlib import Path
 from os import chdir
+from math import isnan
 
 
 PROVINCE = pd.read_csv("data/province.csv")
@@ -31,8 +32,19 @@ def group_by(list_of_dicts, key):
     return reduce(lambda acc, next: group(acc, next, key), list_of_dicts, d)
 
 
+def isnone(dict, key):
+    none_count = reduce(lambda acc, next: acc + 1 if next[key] is None else acc, dict, 0)
+    if none_count == len(dict):
+        return True
+    else:
+        return False
+
+
 def count_total(dict, key):
-    return reduce(lambda acc, next: acc + next[key], dict, 0)
+    if isnone(dict, key):
+        return None
+    else:
+        return reduce(lambda acc, next: acc + next[key] if not next[key] is None else acc, dict, 0)
 
 
 def list_keys(dict, key_name="key"):
@@ -40,37 +52,77 @@ def list_keys(dict, key_name="key"):
     return list({key_name: k, "values": v} for (k, v) in dict.items())
 
 
+def rename_keys(dict, keys_to_rename):
+    for key in sorted(dict.keys()):
+        for old_key, new_key in keys_to_rename.items():
+            if old_key == key:
+                dict[new_key] = dict[old_key]
+                del dict[old_key]
+    return dict
+
+
 def nest(dict, key):
     return list_keys(group_by(dict, key))
 
 
 def process_province_data(dict):
-    grouped = nest(pv_dict, "province")
-    for dict in grouped:
+    grouped = nest(dict, "province")
+    for province in grouped:
         # loop over dicts in list of key "values" & filter out key "province"
-        dict["parking"] = [{key: value for (key, value) in d.items() if key != "province"} for d in dict["values"]]
-        # count total
-        dict["parkingTotal"] = count_total(dict["parking"], "UsageType_count")
-        dict["openAllYearTotal"] = count_total(dict["parking"], "OpenAllYear")
-        dict["exitPossibleAllDayTotal"] = count_total(dict["parking"], "ExitPossibleAllDay")
+        province["parking"] = [{key: value for (key, value) in d.items() if key != "province"} for d in province["values"]]
+        # count totals
+        province["parkingTotal"] = count_total(province["parking"], "UsageType_count")
+        province["openAllYearTotal"] = count_total(province["parking"], "OpenAllYear")
+        province["exitPossibleAllDayTotal"] = count_total(province["parking"], "ExitPossibleAllDay")
         # rename keys
-        dict["province"] = dict["key"]
-        rename_keys = {
+        province["province"] = province["key"]
+        keys_to_rename = {
             "ExitPossibleAllDay": "exitOpenAllDay",
             "OpenAllYear": "openAllYear",
             "UsageType_count": "total",
             "UsageType_Id": "type",
         }
-        for d in dict["parking"]:
-            for key in sorted(d.keys()):
-                for old_key, new_key in rename_keys.items():
-                    if old_key == key:
-                        d[new_key] = d[old_key]
-                        del d[old_key]
+        for d in province["parking"]:
+            rename_keys(d, keys_to_rename)
         # remove keys
         remove_keys = ("key", "values")
         for k in remove_keys:
-            dict.pop(k, None)
+            province.pop(k, None)
+    return grouped
+
+
+def process_municipality_data(dict):
+    grouped = nest(dict, "municipality")
+    for municipality in grouped:
+        # convert floats to integer
+        for d in municipality["values"]:
+            for key, val in d.items():
+                if isinstance(val, float):
+                    if not isnan(val):
+                        d[key] = int(val)
+                    else:
+                        d[key] = None
+        # loop over dicts in list of key "values" & filter out "province" & "municipality"
+        municipality["parking"] = [{key: value for (key, value) in d.items() if key != "municipality" and key != "province"} for d in municipality["values"]]
+        # count totals
+        municipality["parkingTotal"] = count_total(municipality["parking"], "UsageType_count")
+        municipality["openAllYearTotal"] = count_total(municipality["parking"], "OpenAllYear")
+        municipality["exitPossibleAllDayTotal"] = count_total(municipality["parking"], "ExitPossibleAllDay")
+        # rename keys
+        municipality["province"] = municipality["values"][0]["province"]
+        municipality["municipality"] = municipality["key"]
+        keys_to_rename = {
+            "ExitPossibleAllDay": "exitOpenAllDay",
+            "OpenAllYear": "openAllYear",
+            "UsageType_count": "total",
+            "UsageType_Id": "type",
+        }
+        for d in municipality["parking"]:
+            rename_keys(d, keys_to_rename)
+        # remove keys
+        remove_keys = ("key", "values")
+        for k in remove_keys:
+            municipality.pop(k, None)
     return grouped
 
 
@@ -110,9 +162,12 @@ mp_geo_dict = mp_geo.to_dict("records")
 
 # transform dictionaries
 pv = process_province_data(pv_dict)
+mp = process_municipality_data(mp_dict)
 
 # create geojson
 pv_geo_json = create_featurecollection(pv_geo_dict, pv, "province")
+mp_geo_json = create_featurecollection(mp_geo_dict, mp, "municipality")
 
 # export as json
 write_json(pv_geo_json, "provinces")
+write_json(mp_geo_json, "municipalities")
